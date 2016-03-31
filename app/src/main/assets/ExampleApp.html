@@ -25,6 +25,7 @@
 	
 	connectWebViewJavascriptBridge(function(bridge) {
 		var uniqueId = 1
+		//日志文本框中输出
 		function log(message, data) {
 			var log = document.getElementById('log')
 			var el = document.createElement('div')
@@ -33,6 +34,7 @@
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
+		//初始化bridge
 		bridge.init(function(message, responseCallback) {
 			log('JS got a message', message)
 			var data = { 'Javascript Responds':'Wee!' }
@@ -40,6 +42,7 @@
 			responseCallback(data)
 		})
 
+		//注册和客户端对应的方法"testJavascriptHandler"
 		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
 			log('ObjC called testJavascriptHandler with', data)
 			var responseData = { 'Javascript Says':'Right back atcha!' }
@@ -47,6 +50,7 @@
 			responseCallback(responseData)
 		})
 
+		//添加按钮
 		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
 		button.innerHTML = 'Send message to ObjC'
 		button.onclick = function(e) {
@@ -57,9 +61,10 @@
 				log('JS got response', responseData)
 			})
 		}
-
+		//添加按钮间隔
 		document.body.appendChild(document.createElement('br'))
 
+		//添加按钮
 		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
 		callbackButton.innerHTML = 'Fire testObjcCallback'
 		callbackButton.onclick = function(e) {
@@ -69,6 +74,22 @@
 				log('JS got response', response)
 			})
 		}
+
+		//添加按钮间隔
+		document.body.appendChild(document.createElement('br'))
+
+		//添加按钮 -  测试功能
+		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+		callbackButton.innerHTML = 'my test button'
+		callbackButton.onclick = function(e) {
+			e.preventDefault()
+			log('JS calling handler "my test button"')
+			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+				log('JS got response', response)
+			})
+		}
+
+
 	})
 	</script>
 	<div id='buttons'></div> <div id='log'></div>

@@ -60,7 +60,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * JS调用这个Java处理程序方法可以通过 handlerName- 调用方客户端
 	 * @param handlerName JS调用方法名
      */
 	public void callHandler(String handlerName) {
@@ -68,7 +68,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * JS调用这个Java处理程序方法可以通过 handlerName- 调用方客户端
 	 * @param handlerName  JS调用方法名
 	 * @param data	  参数
      */
@@ -77,7 +77,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * JS调用这个Java处理程序方法可以通过 handlerName ,- 调用方客户端
 	 * @param handlerName  JS调用方法名
 	 * @param data	  参数
 	 * @param responseCallback 回调
@@ -87,7 +87,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * 注册一个Java处理函数以便js调用
+	 * 注册一个Java处理函数以便js调用，调用方法H5
 	 * @param handlerName JS调用方法名
 	 * @param handler 回调处理
      */
@@ -99,7 +99,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * 发送消息
+	 * 发送消息 - 调用方客户端
 	 * @param data  发送数据
 	 */
 	public void send(Object data) {
@@ -107,7 +107,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * 发送消息
+	 * 发送消息- 调用方客户端
 	 * @param data 发送数据
 	 * @param responseCallback 回调实现
      */
@@ -116,7 +116,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	}
 
 	/**
-	 * 发送消息
+	 * 发送消息- 调用方客户端
 	 * @param data 发送数据
 	 * @param responseCallback 回调实现
 	 * @param handlerName 句柄名称
