@@ -41,18 +41,15 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 webViewClient.send("A string sent from ObjC to JS", new WVJBWebViewClient.WVJBResponseCallback() {
-
                     @Override
                     public void callback(Object data) {
                         Toast.makeText(getActivity(), "sendMessage got response: " + data, Toast.LENGTH_LONG).show();
                     }
                 });
             }
-
         });
 
         view.findViewById(R.id.button2).setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 try {
@@ -73,10 +70,8 @@ public class MainActivityFragment extends Fragment {
 
     class MyWebViewClient extends WVJBWebViewClient {
         public MyWebViewClient(WebView webView) {
-
             // support js send
             super(webView, new WVJBWebViewClient.WVJBHandler() {
-
                 @Override
                 public void request(Object data, WVJBResponseCallback callback) {
                     Toast.makeText(getActivity(), "ObjC Received message from JS:" + data, Toast.LENGTH_LONG).show();
@@ -84,15 +79,8 @@ public class MainActivityFragment extends Fragment {
                 }
             });
 
-			/*
 			// not support js send
-			super(webView);
-			*/
-
-            enableLogging();
-
             registerHandler("testObjcCallback", new WVJBWebViewClient.WVJBHandler() {
-
                 @Override
                 public void request(Object data, WVJBResponseCallback callback) {
                     Toast.makeText(getActivity(), "testObjcCallback called:" + data, Toast.LENGTH_LONG).show();
@@ -100,26 +88,26 @@ public class MainActivityFragment extends Fragment {
                 }
             });
 
-            send("A string sent from ObjC before Webview has loaded.", new WVJBResponseCallback() {
-
-                @Override
-                public void callback(Object data) {
-                    Toast.makeText(getActivity(), "ObjC got response! :" + data, Toast.LENGTH_LONG).show();
-                }
-            });
+            send("A string sent from ObjC before Webview has loaded.",
+                    new WVJBResponseCallback() {
+                        @Override
+                        public void callback(Object data) {
+                            Toast.makeText(getActivity(), "ObjC got response! :" + data, Toast.LENGTH_LONG).show();
+                        }
+                    });
 
             try {
-                callHandler("testJavascriptHandler", new JSONObject("{\"foo\":\"before ready\" }"),new WVJBResponseCallback() {
-
-                    @Override
-                    public void callback(Object data) {
-                        Toast.makeText(getActivity(), "ObjC call testJavascriptHandler got response! :" + data, Toast.LENGTH_LONG).show();
-                    }
-                });
+                callHandler("testJavascriptHandler",
+                        new JSONObject("{\"foo\":\"before ready\" }"),
+                        new WVJBResponseCallback() {
+                            @Override
+                            public void callback(Object data) {
+                                Toast.makeText(getActivity(), "ObjC call testJavascriptHandler got response! :" + data, Toast.LENGTH_LONG).show();
+                            }
+                        });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
 
         @Override
@@ -131,6 +119,5 @@ public class MainActivityFragment extends Fragment {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return super.shouldOverrideUrlLoading(view, url);
         }
-
     }
 }

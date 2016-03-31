@@ -22,14 +22,13 @@ import android.webkit.WebViewClient;
 public class WVJBWebViewClient extends WebViewClient {
 
 	private static final String kTag = "WVJB";
+	/**JS调用原生引用name */
 	private static final String kInterface = kTag + "Interface";
 	private static final String kCustomProtocolScheme = "wvjbscheme";
 	private static final String kQueueHasMessage = "__WVJB_QUEUE_MESSAGE__";
 
 	private static boolean logging = false;
-
 	protected WebView webView;
-
 	private ArrayList<WVJBMessage> startupMessageQueue = null;
 	private Map<String, WVJBResponseCallback> responseCallbacks = null;
 	private Map<String, WVJBHandler> messageHandlers = null;
@@ -37,18 +36,19 @@ public class WVJBWebViewClient extends WebViewClient {
 	private WVJBHandler messageHandler;
 	private MyJavascriptInterface myInterface = new MyJavascriptInterface();
 
-	public interface WVJBResponseCallback {
-		public void callback(Object data);
-	}
-
-	public interface WVJBHandler {
-		public void request(Object data, WVJBResponseCallback callback);
-	}
-
+	/**
+	 * 不需要支持JS send 方法时
+	 * @param webView
+     */
 	public WVJBWebViewClient(WebView webView) {
 		this(webView, null);
 	}
 
+	/**
+	 * 需要支持JS send 方法时
+	 * @param webView
+	 * @param messageHandler
+     */
 	public WVJBWebViewClient(WebView webView, WVJBHandler messageHandler) {
 		this.webView = webView;
 		this.webView.getSettings().setJavaScriptEnabled(true);
@@ -59,39 +59,69 @@ public class WVJBWebViewClient extends WebViewClient {
 		this.messageHandler = messageHandler;
 	}
 
-	public void enableLogging() {
-		logging = true;
-	}
-
-	public void send(Object data) {
-		send(data, null);
-	}
-
-	public void send(Object data, WVJBResponseCallback responseCallback) {
-		sendData(data, responseCallback, null);
-	}
-
+	/**
+	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * @param handlerName JS调用方法名
+     */
 	public void callHandler(String handlerName) {
 		callHandler(handlerName, null, null);
 	}
 
+	/**
+	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * @param handlerName  JS调用方法名
+	 * @param data	  参数
+     */
 	public void callHandler(String handlerName, Object data) {
 		callHandler(handlerName, data, null);
 	}
 
-	public void callHandler(String handlerName, Object data,
-			WVJBResponseCallback responseCallback) {
+	/**
+	 * JS调用这个Java处理程序方法可以通过 handlerName
+	 * @param handlerName  JS调用方法名
+	 * @param data	  参数
+	 * @param responseCallback 回调
+     */
+	public void callHandler(String handlerName, Object data,WVJBResponseCallback responseCallback) {
 		sendData(data, responseCallback, handlerName);
 	}
 
+	/**
+	 * 注册一个Java处理函数以便js调用
+	 * @param handlerName JS调用方法名
+	 * @param handler 回调处理
+     */
 	public void registerHandler(String handlerName, WVJBHandler handler) {
-		if (handlerName == null || handlerName.length() == 0 || handler == null)
+		if (handlerName == null || handlerName.length() == 0 || handler == null){
 			return;
+		}
 		messageHandlers.put(handlerName, handler);
 	}
 
-	private void sendData(Object data, WVJBResponseCallback responseCallback,
-			String handlerName) {
+	/**
+	 * 发送消息
+	 * @param data  发送数据
+	 */
+	public void send(Object data) {
+		send(data, null);
+	}
+
+	/**
+	 * 发送消息
+	 * @param data 发送数据
+	 * @param responseCallback 回调实现
+     */
+	public void send(Object data, WVJBResponseCallback responseCallback) {
+		sendData(data, responseCallback, null);
+	}
+
+	/**
+	 * 发送消息
+	 * @param data 发送数据
+	 * @param responseCallback 回调实现
+	 * @param handlerName 句柄名称
+     */
+	private void sendData(Object data, WVJBResponseCallback responseCallback,String handlerName) {
 		if (data == null && (handlerName == null || handlerName.length() == 0))
 			return;
 		WVJBMessage message = new WVJBMessage();
@@ -109,6 +139,10 @@ public class WVJBWebViewClient extends WebViewClient {
 		queueMessage(message);
 	}
 
+	/**
+	 * 消息排队
+	 * @param message
+     */
 	private void queueMessage(WVJBMessage message) {
 		if (startupMessageQueue != null) {
 			startupMessageQueue.add(message);
@@ -117,64 +151,17 @@ public class WVJBWebViewClient extends WebViewClient {
 		}
 	}
 
+	/**
+	 * 替换特殊字符，然后执行JS代码
+	 * @param message
+     */
 	private void dispatchMessage(WVJBMessage message) {
 		String messageJSON = message2JSONObject(message).toString()
 				.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\"")
 				.replaceAll("\'", "\\\\\'").replaceAll("\n", "\\\\\n")
 				.replaceAll("\r", "\\\\\r").replaceAll("\f", "\\\\\f");
-
 		log("SEND", messageJSON);
-
-		executeJavascript("WebViewJavascriptBridge._handleMessageFromObjC('"
-				+ messageJSON + "');");
-	}
-
-	private JSONObject message2JSONObject(WVJBMessage message) {
-		JSONObject jo = new JSONObject();
-		try {
-			if (message.callbackId != null) {
-				jo.put("callbackId", message.callbackId);
-			}
-			if (message.data != null) {
-				jo.put("data", message.data);
-			}
-			if (message.handlerName != null) {
-				jo.put("handlerName", message.handlerName);
-			}
-			if (message.responseId != null) {
-				jo.put("responseId", message.responseId);
-			}
-			if (message.responseData != null) {
-				jo.put("responseData", message.responseData);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return jo;
-	}
-
-	private WVJBMessage JSONObject2WVJBMessage(JSONObject jo) {
-		WVJBMessage message = new WVJBMessage();
-		try {
-			if (jo.has("callbackId")) {
-				message.callbackId = jo.getString("callbackId");
-			}
-			if (jo.has("data")) {
-				message.data = jo.get("data");
-			}
-			if (jo.has("handlerName")) {
-				message.handlerName = jo.getString("handlerName");
-			}
-			if (jo.has("responseId")) {
-				message.responseId = jo.getString("responseId");
-			}
-			if (jo.has("responseData")) {
-				message.responseData = jo.get("responseData");
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return message;
+		executeJavascript("WebViewJavascriptBridge._handleMessageFromObjC('"+ messageJSON + "');");
 	}
 
 	private void flushMessageQueue() {
@@ -189,6 +176,10 @@ public class WVJBWebViewClient extends WebViewClient {
 		});
 	}
 
+	/**
+	 * 用来处理消息回调机制
+	 * @param messageQueueString
+     */
 	private void processQueueMessage(String messageQueueString) {
 		try {
 			JSONArray messages = new JSONArray(messageQueueString);
@@ -235,25 +226,25 @@ public class WVJBWebViewClient extends WebViewClient {
 		}
 	}
 
-	void log(String action, Object json) {
-		if (!logging)
-			return;
-		String jsonString = String.valueOf(json);
-		if (jsonString.length() > 500) {
-			Log.i(kTag, action + ": " + jsonString.substring(0, 500) + " [...]");
-		} else {
-			Log.i(kTag, action + ": " + jsonString);
-		}
-	}
 
+
+	/**
+	 * 不需要返回值, script前不要加javascript:前缀
+	 * @param script
+     */
 	public void executeJavascript(String script) {
 		executeJavascript(script, null);
 	}
 
-	public void executeJavascript(String script,
-			final JavascriptCallback callback) {
+	/**
+	 * 需要返回值, script前不要加javascript:前缀
+	 * @param script
+	 * @param callback
+     */
+	public void executeJavascript(String script,final JavascriptCallback callback) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			webView.evaluateJavascript(script, new ValueCallback<String>() {
+				//Android 4.4及更高版本下, 使用WebView.evaluateJavascript方法执行脚本;
 				@Override
 				public void onReceiveValue(String value) {
 					if (callback != null) {
@@ -268,10 +259,11 @@ public class WVJBWebViewClient extends WebViewClient {
 			});
 		} else {
 			if (callback != null) {
+				//Android 4.4以下版本若需要返回值则采用addJavascriptInterface机制实现;
 				myInterface.addCallback(++uniqueId + "", callback);
-				webView.loadUrl("javascript:window." + kInterface
-						+ ".onResultForScript(" + uniqueId + "," + script + ")");
+				webView.loadUrl("javascript:window." + kInterface+ ".onResultForScript(" + uniqueId + "," + script + ")");
 			} else {
+				//Android 4.4以下版本若不需要返回值则使用loadUrl方法执行脚本.
 				webView.loadUrl("javascript:" + script);
 			}
 		}
@@ -280,8 +272,7 @@ public class WVJBWebViewClient extends WebViewClient {
 	@Override
 	public void onPageFinished(WebView view, String url) {
 		try {
-			InputStream is = webView.getContext().getAssets()
-					.open("WebViewJavascriptBridge.js.txt");
+			InputStream is = webView.getContext().getAssets().open("WebViewJavascriptBridge.js.txt");
 			int size = is.available();
 			byte[] buffer = new byte[size];
 			is.read(buffer);
@@ -312,6 +303,89 @@ public class WVJBWebViewClient extends WebViewClient {
 		return super.shouldOverrideUrlLoading(view, url);
 	}
 
+	/**
+	 * 转换传递Bean为JsonObj
+	 * @param message
+	 * @return
+	 */
+	private JSONObject message2JSONObject(WVJBMessage message) {
+		JSONObject jo = new JSONObject();
+		try {
+			if (message.callbackId != null) {
+				jo.put("callbackId", message.callbackId);
+			}
+			if (message.data != null) {
+				jo.put("data", message.data);
+			}
+			if (message.handlerName != null) {
+				jo.put("handlerName", message.handlerName);
+			}
+			if (message.responseId != null) {
+				jo.put("responseId", message.responseId);
+			}
+			if (message.responseData != null) {
+				jo.put("responseData", message.responseData);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jo;
+	}
+
+	/**
+	 * 转换JsonObj为交互桥需要的传递Bean
+	 * @param jo
+	 * @return
+	 */
+	private WVJBMessage JSONObject2WVJBMessage(JSONObject jo) {
+		WVJBMessage message = new WVJBMessage();
+		try {
+			if (jo.has("callbackId")) {
+				message.callbackId = jo.getString("callbackId");
+			}
+			if (jo.has("data")) {
+				message.data = jo.get("data");
+			}
+			if (jo.has("handlerName")) {
+				message.handlerName = jo.getString("handlerName");
+			}
+			if (jo.has("responseId")) {
+				message.responseId = jo.getString("responseId");
+			}
+			if (jo.has("responseData")) {
+				message.responseData = jo.get("responseData");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return message;
+	}
+
+	/**允许log输出*/
+	public void enableLogging() {
+		logging = true;
+	}
+	/**不允许log输出*/
+	public void disableLogging() {
+		logging = false;
+	}
+	/**
+	 * 日志输出
+	 * @param action
+	 * @param json
+	 */
+	void log(String action, Object json) {
+		if (!logging)
+			return;
+		String jsonString = String.valueOf(json);
+		if (jsonString.length() > 500) {
+			Log.i(kTag, action + ": " + jsonString.substring(0, 500) + " [...]");
+		} else {
+			Log.i(kTag, action + ": " + jsonString);
+		}
+	}
+
+	/**交互桥通信传递用Bean类*/
 	private class WVJBMessage {
 		Object data = null;
 		String callbackId = null;
@@ -339,5 +413,11 @@ public class WVJBWebViewClient extends WebViewClient {
 	public interface JavascriptCallback {
 		public void onReceiveValue(String value);
 	};
+	public interface WVJBResponseCallback {
+		public void callback(Object data);
+	}
 
+	public interface WVJBHandler {
+		public void request(Object data, WVJBResponseCallback callback);
+	}
 }
