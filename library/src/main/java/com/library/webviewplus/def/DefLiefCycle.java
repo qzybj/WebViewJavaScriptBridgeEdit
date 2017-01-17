@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.webkit.WebView;
 
-import com.cwebview.i.IFileUploader;
-import com.cwebview.i.ILiefCycle;
-import com.cwebview.i.IVideoPlayer;
-import com.cwebview.i.IWebViewAssister;
+import com.library.webviewplus.i.IFileUploader;
+import com.library.webviewplus.i.ILiefCycle;
+import com.library.webviewplus.i.IVideoPlayer;
+import com.library.webviewplus.i.IWebViewAssister;
 
 /**
  *
@@ -22,7 +22,7 @@ import com.cwebview.i.IWebViewAssister;
  *           处理Webview的文件和图片上传
  */
 
-public class DefLiefCycle implements ILiefCycle{
+public class DefLiefCycle implements ILiefCycle {
     //Application context
     private Context context ;
     //Webview辅助信息

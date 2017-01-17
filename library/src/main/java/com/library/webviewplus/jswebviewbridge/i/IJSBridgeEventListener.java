@@ -1,7 +1,7 @@
 package com.library.webviewplus.jswebviewbridge.i;
 
 
-import com.cwebview.jswebviewbridge.WVJBWebViewClient;
+import com.library.webviewplus.jswebviewbridge.WVJBWebViewClient;
 
 /**
  *

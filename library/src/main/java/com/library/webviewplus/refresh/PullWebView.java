@@ -12,20 +12,18 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-
-import com.cwebview.WebViewController;
-import com.cwebview.i.IChooseFileListener;
-import com.cwebview.i.IJavaScriptInterface;
-import com.cwebview.i.ILiefCycle;
-import com.cwebview.i.IVideoPlayerParams;
-import com.cwebview.i.IWebView;
-import com.cwebview.i.IWebViewCallback;
-import com.cwebview.i.IWebViewClientCallback;
-import com.cwebview.i.IWebViewParams;
-import com.cwebview.jswebviewbridge.i.IJSBridgeEventListener;
-import com.cwebview.util.CLog;
-import com.cwebview.util.StringUtil;
-
+import com.library.webviewplus.WebViewController;
+import com.library.webviewplus.i.IChooseFileListener;
+import com.library.webviewplus.i.IJavaScriptInterface;
+import com.library.webviewplus.i.ILiefCycle;
+import com.library.webviewplus.i.IVideoPlayerParams;
+import com.library.webviewplus.i.IWebView;
+import com.library.webviewplus.i.IWebViewCallback;
+import com.library.webviewplus.i.IWebViewClientCallback;
+import com.library.webviewplus.i.IWebViewParams;
+import com.library.webviewplus.jswebviewbridge.i.IJSBridgeEventListener;
+import com.library.webviewplus.util.CLog;
+import com.library.webviewplus.util.StringUtil;
 import java.util.ArrayList;
 
 

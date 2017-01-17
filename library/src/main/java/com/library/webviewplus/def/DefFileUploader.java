@@ -7,15 +7,13 @@ import android.os.Environment;
 import android.view.KeyEvent;
 import android.webkit.ValueCallback;
 import android.widget.Toast;
-
-import com.cwebview.R;
-import com.cwebview.i.IChooseFileListener;
-import com.cwebview.i.IFileUploader;
-import com.cwebview.i.IWebViewCallback;
-import com.cwebview.util.FileUtils;
-import com.cwebview.util.PhotosUtils;
-import com.cwebview.util.StringUtil;
-
+import com.library.webviewplus.R;
+import com.library.webviewplus.i.IChooseFileListener;
+import com.library.webviewplus.i.IFileUploader;
+import com.library.webviewplus.i.IWebViewCallback;
+import com.library.webviewplus.util.FileUtils;
+import com.library.webviewplus.util.PhotosUtils;
+import com.library.webviewplus.util.StringUtil;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -30,7 +28,7 @@ import java.util.UUID;
  *      处理文件，图片上传
  */
 
-public class DefFileUploader implements IFileUploader,IChooseFileListener{
+public class DefFileUploader implements IFileUploader,IChooseFileListener {
     private static final int REQ_CAMERA = 2901;
     private static final int REQ_PHOTOS = REQ_CAMERA+1;
     /**

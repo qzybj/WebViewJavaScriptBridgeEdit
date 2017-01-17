@@ -8,9 +8,9 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.cwebview.i.IFileUploader;
-import com.cwebview.i.IVideoPlayer;
-import com.cwebview.i.IWebViewCallback;
+import com.library.webviewplus.i.IFileUploader;
+import com.library.webviewplus.i.IVideoPlayer;
+import com.library.webviewplus.i.IWebViewCallback;
 
 /**
  *

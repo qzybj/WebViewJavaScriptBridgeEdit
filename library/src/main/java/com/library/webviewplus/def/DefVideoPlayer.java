@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 
-import com.cwebview.i.IVideoPlayer;
-import com.cwebview.i.IVideoPlayerParams;
-import com.cwebview.i.IWebViewCallback;
+import com.library.webviewplus.i.IVideoPlayer;
+import com.library.webviewplus.i.IVideoPlayerParams;
+import com.library.webviewplus.i.IWebViewCallback;
 
 /**
  *

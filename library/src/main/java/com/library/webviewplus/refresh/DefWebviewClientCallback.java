@@ -6,7 +6,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
-import com.cwebview.i.IWebViewClientCallback;
+import com.library.webviewplus.i.IWebViewClientCallback;
 
 /**
  *

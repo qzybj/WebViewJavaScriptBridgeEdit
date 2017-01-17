@@ -9,11 +9,11 @@ import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.cwebview.CWebView;
-import com.cwebview.i.IWebViewAssister;
-import com.cwebview.i.IWebViewParams;
-import com.cwebview.util.CLog;
-import com.cwebview.util.WebViewSettingUtil;
+import com.library.webviewplus.CWebView;
+import com.library.webviewplus.i.IWebViewAssister;
+import com.library.webviewplus.i.IWebViewParams;
+import com.library.webviewplus.util.CLog;
+import com.library.webviewplus.util.WebViewSettingUtil;
 
 /**
  *
