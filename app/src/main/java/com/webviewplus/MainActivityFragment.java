@@ -1,4 +1,4 @@
-package webviewjavascriptbridge.earlll.com;
+package com.webviewplus;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 /**
  * A placeholder fragment containing a simple view.

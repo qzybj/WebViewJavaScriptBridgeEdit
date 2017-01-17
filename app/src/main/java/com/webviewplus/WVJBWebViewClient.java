@@ -1,15 +1,13 @@
-package webviewjavascriptbridge.earlll.com;
+package com.webviewplus;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.util.Log;
@@ -17,6 +15,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 
 @SuppressLint({ "SetJavaScriptEnabled", "NewApi" })
 public class WVJBWebViewClient extends WebViewClient {
